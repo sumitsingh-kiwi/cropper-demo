@@ -5,3 +5,8 @@ from django.shortcuts import render
 
 def demo(request):
     return render(request, template_name='index.html', context={})
+
+
+def upload(request):
+    print(request.GET, request.FILES)
+    return render(request, template_name='index.html', context={})

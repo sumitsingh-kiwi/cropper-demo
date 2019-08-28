@@ -5,10 +5,12 @@
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
 </head>
 <body>
-<button onclick="addIMagePicker()">add Photo</button>
-<form name="image-picker">
-<!--    <input type="file" name="image" id="file-input" onchange="changeImage(this)">-->
+<!--<button onclick="addIMagePicker()">add Photo</button>-->
+<form name="image-picker" method="get" action="/upload/">
+    <input type="file" name="image" id="file-input" onchange="changeImage(this)">
 <!--    <img src="" id="preview">-->
+	<input type="submit">
+	<input type="hidden" name="upload_file" id="final_file">
 </form>
 
 <!-- The Modal for cropper -->
@@ -36,23 +38,15 @@
 </div>
 <!-- The Modal for cropper  -->
 
-<script src="/static/bootstrap.min.js"></script>
 <script>
-image_no = 1;
+image_no = 0;
+image_arr = [];
 function addIMagePicker(){
-    var new_image_picker = '<input type="file" id="file-input-'+image_no+'" onchange="changeImage(this, '+image_no+')">';
-    var new_image_preview = '<img src="" id="preview-'+image_no+'">';
-    var input = document.createElement("input");
-    input.setAttribute('type', 'file');
-    input.setAttribute('id', "file-input-"+image_no);
-    input.setAttribute('onchange', 'changeImage(this, '+image_no+')');
-    document.forms['image-picker'].append(input);
-
+    image_no += 1;
 
     var image = document.createElement("img");
     image.setAttribute('id', "preview-"+image_no);
     document.forms['image-picker'].append(image);
-    image_no += 1;
 }
 
 function getRoundedCanvas(sourceCanvas) {
@@ -70,7 +64,7 @@ function getRoundedCanvas(sourceCanvas) {
     context.fill();
     return canvas;
 }
-function readURL(input, image_no) {
+function readURL(input) {
 
     if (input.files && input.files[0]) {
         var reader = new FileReader();
@@ -99,10 +93,11 @@ function readURL(input, image_no) {
                 let croppedCanvas = cropper.getCroppedCanvas();
                 roundedCanvas = getRoundedCanvas(croppedCanvas);
                 // Show
-                preview_id = "#preview-" + image_no.toString();
+                preview_id = "#preview-" + image_no;
                 $(preview_id).attr('src', roundedCanvas.toDataURL());
-                input_field_id = '#file-input' + image_no.toString();
-                $(input_field_id).value = roundedCanvas.toDataURL();
+
+                image_arr.push({'id': image_no, 'image': roundedCanvas.toDataURL()})
+                $("#final_file").attr("value", JSON.stringify(image_arr));
             };
 
         }
@@ -111,8 +106,9 @@ function readURL(input, image_no) {
     }
 }
 
-function changeImage(obj, image_no){
-    readURL(obj, image_no);
+function changeImage(obj){
+	addIMagePicker();
+    readURL(obj);
     $("#cropper-modal").modal("show");
 
 }
@@ -126,6 +122,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 			});
 		});
 </script>
+<script src="/static/bootstrap.min.js"></script>
 <script src="/static/cropper.js"></script>
 </body>
 </html>
