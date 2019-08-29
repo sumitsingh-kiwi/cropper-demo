@@ -6,7 +6,8 @@
 </head>
 <body>
 <!--<button onclick="addIMagePicker()">add Photo</button>-->
-<form name="image-picker" method="get" action="/upload/">
+<form name="image-picker" method="post" action="/upload/">
+	{% csrf_token %}
     <input type="file" name="image" id="file-input" onchange="changeImage(this)">
 <!--    <img src="" id="preview">-->
 	<input type="submit">
