@@ -1,7 +1,7 @@
 name: Conditional Deploy
 
 on:
-  - push:
+  push:
     branches:
       - Dev
       - QA
