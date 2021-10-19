@@ -17,3 +17,9 @@ jobs:
 
       - name: show branch name
         run: echo ${{ steps.extract_branch.outputs.branch }}       
+      
+      - name: run according to the branch name
+        if: steps.extract_branch.outputs.branch  == 'Dev'
+        run: echo 'from Dev'
+        if:  steps.extract_branch.outputs.branch == 'QA'
+        run: echo 'from QA'
