@@ -1,13 +1,5 @@
 name: Conditional Deploy
 
-on:
-  push:
-    branches:
-      - Dev, QA, Stage
-  pull_request:
-    branches:
-      - Dev
-
 jobs:
   build:
     runs-on: windows-latest
